@@ -1,1 +1,27 @@
-docker things
+version: '3.3'
+
+services:
+    nginx:
+        build: requirements/nginx/
+        ports: 
+        - "443:443"
+        command: bash         ## Esto sobra buscar una manera mejor
+    worpdress:
+        build: requirements/wordpress/
+        volumes:
+        - wp-database:/database
+        - wp-website:/website
+        command:  bash         ## Esto tambien sobra buscar algo mejor
+volumes:
+    wp-database:
+        driver: local
+        driver_opts:
+            o: bind
+            type: none
+            device: ./wp-database/
+    wp-website:
+        driver: local
+        driver_opts:
+            o: bind
+            type: none
+            device: ./wp-website
