@@ -1,17 +1,44 @@
-version: '3.3'
+version: '3.9'
 
 services:
     nginx:
         build: requirements/nginx/
         ports: 
         - "443:443"
-        command: bash         ## Esto sobra buscar una manera mejor
-    worpdress:
+        - "80:80"
+        depends_on:
+            - wordpress
+        command: tail -f /dev/null
+        env_file:
+            - .env
+        ## Esto sobra buscar una manera mejor
+        volumes:
+        - wp-website:/var/www/html
+        networks:
+        - default
+    wordpress:
         build: requirements/wordpress/
         volumes:
-        - wp-database:/database
-        - wp-website:/website
-        command:  bash         ## Esto tambien sobra buscar algo mejor
+        - wp-website:/usr/share/webapps
+        - wp-database:/var/lib/mysql
+        depends_on:
+            - mariadb
+        command: tail -f /dev/null
+        env_file:
+            - .env
+        networks:
+        - default
+      ## Esto tambien sobra buscar algo mejor
+    mariadb:
+        build: requirements/mariadb
+        env_file:
+            - .env
+        command: tail -f /dev/null
+        volumes:
+        - wp-database:/var/lib/mysql
+        networks:
+        - default
+
 volumes:
     wp-database:
         driver: local
@@ -24,4 +51,6 @@ volumes:
         driver_opts:
             o: bind
             type: none
-            device: ./wp-website
+            device: ./wp-website/
+networks:
+    default:
