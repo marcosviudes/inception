@@ -17,7 +17,6 @@ services:
         build: requirements/wordpress
         volumes:
             - wp-website:/var/www/wordpress
-            - wp-database:/var/lib/mysql
         command: tail -f /dev/null
         env_file:
             - .env
