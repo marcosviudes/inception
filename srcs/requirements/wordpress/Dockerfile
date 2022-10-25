@@ -9,6 +9,4 @@ RUN apk add --no-cache \
         php8 php8-fpm php8-opcache php8-gd php8-mysqli php8-zlib php8-curl \
         mariadb-client
 
-
-
-
+RUN openrc && touch /run/openrc/softlevel
