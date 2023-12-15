@@ -1,36 +1,46 @@
 version: '3.9'
 
 services:
-    nginx:
-        build: requirements/nginx
-        ports:
-        - "443:443"
-        - "80:80"
-        command: tail -f /dev/null
-        env_file:
-            - .env
-        volumes:
-            - wp-website:/var/www/wordpress
-        networks:
-            - default
-    wordpress:
-        build: requirements/wordpress
-        volumes:
-            - wp-website:/var/www/wordpress
-        command: tail -f /dev/null
-        env_file:
-            - .env
-        networks:
-            - default
-    mariadb:
-        build: requirements/mariadb
-        env_file:
-            - .env
-        command: tail -f /dev/null
-        volumes:
-            - wp-database:/var/lib/mysql
-        networks:
-            - default
+  nginx:
+    build: requirements/nginx
+    ports:
+      - "443:443"
+      - "80:80"
+    env_file: .env
+    #command: tail -f /dev/null
+    volumes:
+      - wp-website:/var/www/wordpress
+    networks:
+      - default
+    restart:
+      on-failure
+    depends_on:
+      - wordpress
+
+  wordpress:
+    build: requirements/wordpress
+    volumes:
+      - wp-website:/var/www/wordpress
+    command: php-fpm82 --nodaemonize 
+    env_file: .env
+    networks:
+      - default
+    restart:
+      on-failure
+    depends_on:
+      - mariadb
+
+  mariadb:
+    build: requirements/mariadb
+    env_file: .env
+    command: tail -f /dev/null
+    volumes:
+      - wp-database:/var/lib/mysql
+    networks:
+      - default
+    restart:
+      on-failure
+  
 volumes:
     wp-database:
         driver: local
