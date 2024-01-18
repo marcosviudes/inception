@@ -40,6 +40,8 @@ services:
       - default
     restart:
       on-failure
+    expose:
+      - "3306"
   
 volumes:
     wp-database:

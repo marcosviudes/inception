@@ -11,16 +11,23 @@
 # #ENTRYPOINT ["sh", "./mariadb.sh"]
 # CMD ./setup.sh && mysqld_safe
 
-FROM alpine:3.13
+FROM alpine:3.19.0
 
-RUN apk add mariadb mariadb-client mariadb-common openrc
+RUN     apk --no-cache update &&\
+        apk --no-cache upgrade  &&\
+        apk --no-cache add vim openrc mariadb mariadb-client
 
-RUN openrc && touch /run/openrc/softlevel && /etc/init.d/mariadb setup && /etc/init.d/mariadb start
-
+RUN openrc && touch /run/openrc/softlevel
+#RUN mysql_install_db 
 RUN sed -e '/skip-networking/s/^/#/g' -i /etc/my.cnf.d/mariadb-server.cnf
+
+#COPY my.cnf /etc/mysql/my.cnf
+#COPY my.cnf /etc/my.cnf
 
 COPY tools/setup.sh .
 
-RUN chmod -R 777 setup.sh
+RUN chmod 777 setup.sh
 
-CMD ./setup.sh && mysqld_safe
+#CMD ./setup.sh 
+#CMD ./setup.sh #&& mysqld_safe
+#ENTRYPOINT ["./setup.sh"]
