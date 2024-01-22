@@ -19,7 +19,8 @@ services:
     build: requirements/wordpress
     volumes:
       - wp-website:/var/www/wordpress
-    command: php-fpm82 --nodaemonize 
+    #command: php-fpm82 --nodaemonize 
+    command: /init.sh
     env_file: .env
     networks:
       - default
@@ -47,13 +48,13 @@ volumes:
         driver_opts:
             o: bind
             type: none
-            device: ./wp-database/
+            device: /home/mviudes/data/wp-database
     wp-website:
         driver: local
         driver_opts:
             o: bind
             type: none
-            device: ./wp-website/
+            device: /home/mviudes/data/wp-website/
 
 networks:
     default:

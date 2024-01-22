@@ -12,7 +12,8 @@ RUN apk add --no-cache \
         php-mysqli \
         mariadb-client \
         php-mbstring \
-        php-session
+        php-session\
+        curl netcat-openbsd
 
 
 COPY ./conf/www.conf /etc/php82/php-fpm.d/www.conf
@@ -31,6 +32,8 @@ RUN wget https://wordpress.org/wordpress-6.4.tar.gz && \
     tar -xzvf wordpress-6.4.tar.gz -C /var/www/ && \
 	rm wordpress-6.4.tar.gz
 
+RUN chmod +x /init.sh
+#EXPOSE 443
 ############
 #Recommend PHP 7.4 or greater and MySQL version 5.7 or MariaDB version 10.4 or greater.
 ############
