@@ -19,7 +19,6 @@ services:
     build: requirements/wordpress
     volumes:
       - wp-website:/var/www/wordpress
-    #command: php-fpm82 --nodaemonize 
     command: /init.sh
     env_file: .env
     networks:
